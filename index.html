@@ -113,31 +113,7 @@
 
   <section id="introduccion">
     <h2 style="text-align: center;">Introducción</h2>
-    <p class="info-text">Este proyecto se trata de realizar un registro de inventarios con los temas y métodos que hemos visto en clase, los temas a desarrollar son:"Registro de Operaciones", en el cual existen tres métodos: Método Analítico, Método Global y Método Perpetuo, de los cuales tenemos que escoger alguno de ellos.
-Para mi trabajo, escogi el Método Perpetuo, que consiste en registrar cada movimiento de mercancía en tiempo real, permitiendo conocer en todo momento el stock disponible. El inventario permanente o perpetuo es un método para contabilizar mercancía, con el cual se lleva un seguimiento continuo de los niveles de inventario. 
-
-      
-Ventajas.                                                                                                 
-Se puede conocer en cualquier momento el inventario final.                   
-No es necesario cerrar el negocio para determinar el inventario final.   
-      
-
-Desventajas.
-Requieres de más tiempo y análisis.    
-Necesita de recursos tecnológicos.
-
-      
-Y "Valoración de Inventarios", teniendo como opciones: PEPS, UEPS y Valoración Ponderada, de los cuales el elegido es la Valoración Ponderada.
-Consiste en asignar un costo uniforme a las unidades de mercancía cuando estas son adquiridas en diferentes fechas y con distintos precios. Este método calcula un costo promedio por unidad después de cada entrada de mercancía, y ese promedio es el que se utiliza para valorar las salidas de inventario, ya sea por venta, devolución o consumo interno. Este procedimiento se basa en la fórmula del promedio ponderado, que consiste en dividir el costo total acumulado de las existencias disponibles entre la cantidad total de unidades
-
-      
-Ventajas.                                                                                                
-Suaviza la variabilidad de precios.          
-      
-
-Desventajas.
-No refleja precios actuales si hay inflación o deflación.
-</p>
+    <p class="info-text">Aquí va la información de introducción que tienes en la imagen.</p>
     <div class="footer-icons">
       <img src="Portada.png" alt="Portada" onclick="mostrar('portada')">
       <img src="Menu.png" alt="Menú" onclick="mostrar('menu')">
@@ -147,13 +123,7 @@ No refleja precios actuales si hay inflación o deflación.
 
   <section id="conclusion">
     <h2 style="text-align: center;">Conclusión</h2>
-    <p class="info-text">La implementación de métodos adecuados de control de inventarios permite a mi empresa creada HatYork tener una mejor distribución de sus ventas a lo largo del tiempo. De igual forma, ayuda a tomar decisiones acertadas sobre producción, compras y ventas, basadas en datos reales y actualizados.
-El método perpetuo ofrece una visión clara y en tiempo real del inventario, lo que facilita detectar necesidades de reabastecimiento y controlar las salidas de mercancía. Por su parte, la valoración ponderada permite calcular de forma justa el costo unitario promedio, evitando alteraciones drásticas por cambios de precio entre compras.
-
-      
-Ambos métodos, ofrecen ventajas importantes: mayor precisión contable, automatización de cálculos, reducción de errores manuales y ahorro de tiempo administrativo. 
-En conjunto, estas herramientas fortalecen la eficiencia operativa de la empresa y aumentan su rentabilidad.
-</p>
+    <p class="info-text">Aquí va la información de la conclusión que tienes en la imagen.</p>
     <div class="footer-icons">
       <img src="Portada.png" alt="Portada" onclick="mostrar('portada')">
       <img src="Introduccion.png" alt="Introducción" onclick="mostrar('introduccion')">
@@ -237,7 +207,7 @@ En conjunto, estas herramientas fortalecen la eficiencia operativa de la empresa
     </div>
   </section>
 
- <script>
+  <script>
     let existencias = 0;
     let valorFinal = 0;
     let ventasTotales = 0;
@@ -248,21 +218,31 @@ En conjunto, estas herramientas fortalecen la eficiencia operativa de la empresa
       document.getElementById(id).classList.add('active');
     }
 
-    function actualizarCuentasT() {
-      const cuentasDiv = document.getElementById("cuentasT");
-      cuentasDiv.innerHTML = "";
+    document.getElementById("tipo").addEventListener("change", function () {
+      const tipo = this.value;
+      const precio = document.getElementById("precio");
 
-      const crearCaja = (titulo, valores) => {
-        const box = document.createElement("div");
-        box.className = "t-box";
-        box.innerHTML = `<h4>${titulo}</h4>` + valores.map(val => `<p>$${val.toFixed(2)}</p>`).join("");
-        cuentasDiv.appendChild(box);
-      };
-
-      crearCaja("Ventas", [ventasTotales]);
-      crearCaja("Costo de Ventas", [costoDeVentas]);
-      crearCaja("Utilidad Bruta", [ventasTotales - costoDeVentas]);
-    }
+      if (tipo === "Venta" || tipo === "Devolución sobre venta") {
+        precio.readOnly = true;
+        if (existencias > 0) {
+          const promedio = valorFinal / existencias;
+          precio.value = promedio.toFixed(2);
+        } else {
+          precio.value = "0.00";
+        }
+      } else if (tipo === "Devolución sobre compra") {
+        precio.readOnly = true;
+        const filas = document.querySelectorAll("#tabla tbody tr");
+        if (filas.length > 0) {
+          const ultimaFila = filas[filas.length - 1];
+          const cu = ultimaFila.children[4].textContent.replace("$", "");
+          precio.value = parseFloat(cu).toFixed(2);
+        }
+      } else {
+        precio.readOnly = false;
+        precio.value = "";
+      }
+    });
 
     document.getElementById("form").addEventListener("submit", function (e) {
       e.preventDefault();
@@ -306,11 +286,10 @@ En conjunto, estas herramientas fortalecen la eficiencia operativa de la empresa
       document.getElementById("stockInfo").innerText = `Cantidad: ${existencias} unidades | Valor: $${valorFinal.toFixed(2)}`;
       document.getElementById("utilidadInfo").innerText = `Ventas netas: $${ventasTotales.toFixed(2)} | Costo de ventas: $${costoDeVentas.toFixed(2)} | Utilidad bruta: $${(ventasTotales - costoDeVentas).toFixed(2)}`;
 
-      actualizarCuentasT();
-
       this.reset();
       document.getElementById("tipo").dispatchEvent(new Event("change"));
     });
   </script>
 </body>
 </html>
+
